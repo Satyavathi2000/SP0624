@@ -12,5 +12,5 @@
 
 # Project Title
 
-[![Java CI](https://github.com/your-username/your-repo-name/actions/workflows/ci.yml/badge.svg)](https://github.com/your-username/your-repo-name/actions/workflows/ci.yml)
+[![Java CI](https://github.com/Satyavathi2000/SP0624/actions/workflows/ci.yml/badge.svg)](https://github.com/your-username/your-repo-name/actions/workflows/ci.yml)
 

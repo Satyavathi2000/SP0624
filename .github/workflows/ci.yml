@@ -25,15 +25,14 @@ jobs:
 
       - name: Run tests
         run: mvn test
-
       - name: Archive test reports
         uses: actions/upload-artifact@v2
         with:
           name: test-reports
           path: target/surefire-reports
 
-      - name: Publish Test results
-        uses: EnricoMipublish-unit-test-result-action@v1
+      - name: Publish Test Results
+        uses: EnricoMi/publish-unit-test-result-action@v1
         if: always()
         with:
           files: '**/TEST-*.xml'

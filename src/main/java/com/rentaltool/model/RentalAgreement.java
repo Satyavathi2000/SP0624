@@ -1,16 +1,19 @@
 package com.rentaltool.model;
 
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 
-
-import java.util.Calendar;
-import java.util.Date;
-import java.util.concurrent.TimeUnit;
-
+/**
+ * Represents a Rental Agreement for a rented tool.
+ */
 public class RentalAgreement {
-    private Tool tool;
+
+    private String toolCode;
+    private String toolType;
+    private String toolBrand;
     private int rentalDays;
-    private Date checkoutDate;
-    private Date dueDate;
+    private LocalDate checkoutDate;
+    private LocalDate dueDate;
     private double dailyRentalCharge;
     private int chargeDays;
     private double preDiscountCharge;
@@ -18,71 +21,60 @@ public class RentalAgreement {
     private double discountAmount;
     private double finalCharge;
 
-    public RentalAgreement(Tool tool, int rentalDays, Date checkoutDate, int discountPercent) {
-        this.tool = tool;
+    /**
+     * Constructs a new Rental Agreement.
+     *
+     * @param toolCode          the tool code
+     * @param toolType          the tool type
+     * @param toolBrand         the tool brand
+     * @param rentalDays        the number of rental days
+     * @param checkoutDate      the checkout date
+     * @param dueDate           the due date
+     * @param dailyRentalCharge the daily rental charge
+     * @param chargeDays        the number of chargeable days
+     * @param preDiscountCharge the pre-discount charge
+     * @param discountPercent   the discount percent
+     * @param discountAmount    the discount amount
+     * @param finalCharge       the final charge
+     */
+    public RentalAgreement(String toolCode, String toolType, String toolBrand, int rentalDays, LocalDate checkoutDate,
+                           LocalDate dueDate, double dailyRentalCharge, int chargeDays, double preDiscountCharge,
+                           int discountPercent, double discountAmount, double finalCharge) {
+        this.toolCode = toolCode;
+        this.toolType = toolType;
+        this.toolBrand = toolBrand;
         this.rentalDays = rentalDays;
         this.checkoutDate = checkoutDate;
+        this.dueDate = dueDate;
+        this.dailyRentalCharge = dailyRentalCharge;
+        this.chargeDays = chargeDays;
+        this.preDiscountCharge = preDiscountCharge;
         this.discountPercent = discountPercent;
-        this.dailyRentalCharge = tool.getDailyCharge();
-        calculateAgreementDetails();
+        this.discountAmount = discountAmount;
+        this.finalCharge = finalCharge;
     }
 
-
-    private void calculateAgreementDetails() {
-        dueDate = new Date(checkoutDate.getTime() + TimeUnit.DAYS.toMillis(rentalDays));
-        chargeDays = calculateChargeDays();
-        preDiscountCharge = chargeDays * dailyRentalCharge;
-        discountAmount = preDiscountCharge * discountPercent / 100.0;
-
-        finalCharge = preDiscountCharge - discountAmount;
+    public String getToolCode() {
+        return toolCode;
     }
 
-    private int calculateChargeDays() {
-        int count = 0;
-        Calendar calendar = Calendar.getInstance();
-        calendar.setTime(checkoutDate);
-        for (int i = 0; i < rentalDays; i++) {
-            calendar.add(Calendar.DAY_OF_MONTH, 1);
-            int dayOfWeek = calendar.get(Calendar.DAY_OF_WEEK);
-            boolean isWeekend = (dayOfWeek == Calendar.SATURDAY || dayOfWeek == Calendar.SUNDAY);
-            boolean isHoliday = isHoliday(calendar);
-
-            if ((isWeekend && tool.isChargeOnWeekends()) || (!isWeekend  && !isHoliday && tool.isChargeOnWeekdays()) || (isHoliday && tool.isChargeOnHolidays())) {
-                count++;
-            }
-        }
-        return count;
+    public String getToolType() {
+        return toolType;
     }
 
-    private boolean isHoliday(Calendar calendar) {
-        //independence day
-        //
-        if (calendar.get(Calendar.MONTH) == Calendar.JULY && (calendar.get(Calendar.DAY_OF_MONTH) == 4 ||
-                (calendar.get(Calendar.DAY_OF_WEEK) == Calendar.FRIDAY && calendar.get(Calendar.DAY_OF_MONTH) == 3) ||
-                (calendar.get(Calendar.DAY_OF_WEEK) == Calendar.MONDAY && calendar.get(Calendar.DAY_OF_MONTH) == 5))) {
-            return true;
-        }
-        //labour day
-        if (calendar.get(Calendar.MONTH) == Calendar.SEPTEMBER && calendar.get(Calendar.DAY_OF_WEEK) == Calendar.MONDAY &&
-            calendar.get(Calendar.DAY_OF_MONTH) <= 7) {
-            return true;
-        }
-        return false;
-    }
-
-    public Tool getTool() {
-        return tool;
+    public String getToolBrand() {
+        return toolBrand;
     }
 
     public int getRentalDays() {
         return rentalDays;
     }
 
-    public Date getCheckoutDate() {
+    public LocalDate getCheckoutDate() {
         return checkoutDate;
     }
 
-    public Date getDueDate() {
+    public LocalDate getDueDate() {
         return dueDate;
     }
 
@@ -108,5 +100,24 @@ public class RentalAgreement {
 
     public double getFinalCharge() {
         return finalCharge;
+    }
+
+    /**
+     * Prints the rental agreement details to the console.
+     */
+    public void print() {
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MM/dd/yy");
+        System.out.println("Tool code: " + toolCode);
+        System.out.println("Tool type: " + toolType);
+        System.out.println("Tool brand: " + toolBrand);
+        System.out.println("Rental days: " + rentalDays);
+        System.out.println("Checkout date: " + checkoutDate.format(formatter));
+        System.out.println("Due date: " + dueDate.format(formatter));
+        System.out.println("Daily rental charge: $" + String.format("%.2f", dailyRentalCharge));
+        System.out.println("Charge days: " + chargeDays);
+        System.out.println("Pre-discount charge: $" + String.format("%.2f", preDiscountCharge));
+        System.out.println("Discount percent: " + discountPercent + "%");
+        System.out.println("Discount amount: $" + String.format("%.2f", discountAmount));
+        System.out.println("Final charge: $" + String.format("%.2f", finalCharge));
     }
 }

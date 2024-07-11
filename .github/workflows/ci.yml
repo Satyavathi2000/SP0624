@@ -36,9 +36,3 @@ jobs:
         if: always()
         with:
           files: '**/TEST-*.xml'
-
-      - name: Add test status badge
-        uses: stefanbuck/jekyll-auto-badge@v2.0.1
-        with:
-          token: ${{ secrets.GITHUB_TOKEN }}
-          readme: README.md
